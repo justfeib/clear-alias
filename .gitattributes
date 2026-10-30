@@ -1,0 +1,9 @@
+# Normalizza i fine riga in base al tipo di file, indipendentemente dalla
+# configurazione di git sulla macchina di chi clona.
+* text=auto eol=lf
+
+# Gli script per cmd.exe devono avere CRLF anche dopo un checkout su Linux/macOS,
+# altrimenti il file arriva con soli \n.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
