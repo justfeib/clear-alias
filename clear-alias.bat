@@ -86,7 +86,7 @@ rem ------------------------------------------------------------
 :uninstall
 if not exist "%TARGET%\%SHIM%" (
     echo.
-    echo [INFO] Niente da rimovere: %TARGET%\%SHIM$ non esiste.
+    echo [INFO] Niente da rimuovere: %TARGET%\%SHIM% non esiste.
     exit /b 0
 )
 del /q "%TARGET%\%SHIM%" 2>nul
@@ -108,7 +108,7 @@ exit /b 0
 rem ------------------------------------------------------------
 :notarget
 echo.
-echo [ERRORE] Cartella non disponibile o non scritvibile:
+echo [ERRORE] Cartella non disponibile o non scrivibile:
 echo          %TARGET%
 echo.
 echo          Puo' succedere se la cartella e' stata rimossa o se
@@ -143,7 +143,7 @@ echo Verifica - dove risolve "clear" in questo momento:
 where clear 2>nul
 if errorlevel 1 (
     echo   [ATTENZIONE] "clear" non viene trovato nel PATH.
-    echo               Controlla che %TARGET% sia nel PATH utente.
+    echo                Controlla che %TARGET% sia nel PATH utente.
 ) else (
     echo   [OK] Trovato. Se sopra compaiono piu' righe, in cmd
     echo        vince la PRIMA: se non e' lo shim, un altro comando
@@ -157,7 +157,7 @@ where powershell >nul 2>&1
 if errorlevel 1 exit /b 0
 echo.
 echo Stato di PowerShell:
-powershell -NoProfile -Command "$a = Get-Command clear -ErrorAction SilentlyContinue; if ($a) { '  [OK] gia''' disponibile: ' + $a.CommandType + ' -> ' + $a.Definition } else { '  [INFO] assente. Aggiungi al profilo la riga:'; '           Set-Alias -Name clear -Value Clear-Host' }" 2>nul
+powershell -NoProfile -Command "$a = Get-Command clear -ErrorAction SilentlyContinue; if ($a) { '  [OK] gia'' disponibile: ' + $a.CommandType + ' -> ' + $a.Definition } else { '  [INFO] assente. Aggiungi al profilo la riga:'; '           Set-Alias -Name clear -Value Clear-Host' }" 2>nul
 exit /b 0
 
 rem ------------------------------------------------------------
