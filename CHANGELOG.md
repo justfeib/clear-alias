@@ -1,20 +1,20 @@
 # Changelog
 
-Il formato segue [Keep a Changelog](https://keepachangelog.com/it/1.1.0/) e il
-progetto adotta il [versionamento semantico](https://semver.org/lang/it/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+and this project follows [semantic versioning](https://semver.org/).
 
 ## [1.0.0] - 2026-10-30
 
-### Aggiunto
+### Added
 
-- Comando `clear` in `cmd.exe` tramite shim `clear.cmd` scritto in
+- The `clear` command in `cmd.exe`, via a `clear.cmd` shim written to
   `%LOCALAPPDATA%\Microsoft\WindowsApps`.
-- Installazione idempotente: rilanciare lo script ripara lo shim senza creare
-  duplicati.
-- Opzione `/uninstall` per rimuovere lo shim e `/?` per l'aiuto.
-- Controllo di scrivibilita' della cartella di destinazione prima della
-  scrittura, con file di prova temporaneo.
-- Verifica finale con `where clear` e segnalazione di eventuali `clear.exe` che
-  precedono lo shim nel PATH.
-- Rilevamento dello stato di PowerShell: segnala se `clear` e' gia' disponibile,
-  altrimenti stampa la riga da aggiungere al profilo senza modificarlo.
+- Idempotent install: running the script again repairs the shim without
+  creating duplicates.
+- `/uninstall` to remove the shim and `/?` for help.
+- A writability check on the target folder before writing, using a temporary
+  probe file.
+- A final `where clear` check that reports any `clear.exe` coming before the
+  shim in PATH.
+- PowerShell detection: reports whether `clear` is already available, otherwise
+  prints the profile line to add, without editing the profile.

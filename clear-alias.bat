@@ -4,21 +4,21 @@ setlocal EnableExtensions
 rem ============================================================
 rem  clear-alias.bat
 rem
-rem  Rende disponibile il comando "clear" in cmd.exe.
+rem  Makes the "clear" command available in cmd.exe.
 rem
-rem  Come: crea un piccolissimo shim "clear.cmd" (contenuto:
-rem  "cls") dentro %LOCALAPPDATA%\Microsoft\WindowsApps, che e'
-rem  gia' nel PATH dell'utente per impostazione predefinita.
+rem  How: it creates a tiny shim file "clear.cmd" (contents:
+rem  "cls") inside %LOCALAPPDATA%\Microsoft\WindowsApps, a folder
+rem  that is already in the user PATH by default.
 rem
-rem  Cosa NON fa: niente registro, niente AutoRun, niente setx,
-rem  nessuna modifica al PATH, nessun privilegio di amministratore.
-rem  Per disfare tutto basta cancellare quel singolo file (oppure
-rem  usare /uninstall).
+rem  What it does NOT do: no registry, no AutoRun, no setx,
+rem  no PATH changes, no administrator privileges. To undo
+rem  everything, just delete that single file - or run
+rem  /uninstall.
 rem
-rem  Uso:
-rem    clear-alias.bat              installa (o ripara)
-rem    clear-alias.bat /uninstall   rimuove
-rem    clear-alias.bat /?           questo aiuto
+rem  Usage:
+rem    clear-alias.bat              install or repair
+rem    clear-alias.bat /uninstall   remove
+rem    clear-alias.bat /?           this help
 rem ============================================================
 
 set "ACTION=install"
@@ -35,8 +35,8 @@ if /i "%~1"=="-u" (
     set "ACTION=uninstall"
     goto :start
 )
-echo [ERRORE] Opzione non riconosciuta: %~1
-echo          Usa "%~nx0 /?" per l'aiuto.
+echo [ERROR] Unknown option: %~1
+echo         Run "%~nx0 /?" for help.
 exit /b 2
 
 :start
@@ -54,19 +54,19 @@ if errorlevel 1 goto :notarget
 set "PREEXISTING="
 if exist "%TARGET%\%SHIM%" set "PREEXISTING=1"
 
-rem Scrive lo shim: due righe, fine a capo Windows (CRLF).
+rem Write the shim: two lines, Windows line endings (CRLF).
 (echo @echo off&echo cls)>"%TARGET%\%SHIM%" 2>nul
 if not exist "%TARGET%\%SHIM%" goto :writefail
 
 echo.
 if defined PREEXISTING (
-    echo [OK] Lo shim esisteva gia' ed e' stato riscritto:
+    echo [OK] Shim already existed, rewritten:
 ) else (
-    echo [OK] Creato lo shim:
+    echo [OK] Shim created:
 )
 echo      %TARGET%\%SHIM%
 echo.
-echo      Contenuto:
+echo      Contents:
 echo        @echo off
 echo        cls
 echo.
@@ -75,60 +75,60 @@ call :whereclear
 call :psstatus
 
 echo.
-echo Fatto. Apri un cmd e scrivi "clear": deve pulire lo schermo
-echo come "cls". Non serve riavviare nulla: la cartella era gia'
-echo nel PATH, quindi funziona anche nei cmd gia' aperti.
+echo Done. Open a cmd and type "clear": it should wipe the screen
+echo like "cls". No restart needed: the folder was already in
+echo PATH, so it works in cmd windows that are already open too.
 echo.
-echo Per rimuovere: "%~nx0 /uninstall"
+echo To remove it: "%~nx0 /uninstall"
 exit /b 0
 
 rem ------------------------------------------------------------
 :uninstall
 if not exist "%TARGET%\%SHIM%" (
     echo.
-    echo [INFO] Niente da rimuovere: %TARGET%\%SHIM% non esiste.
+    echo [INFO] Nothing to remove: %TARGET%\%SHIM% does not exist.
     exit /b 0
 )
 del /q "%TARGET%\%SHIM%" 2>nul
 if exist "%TARGET%\%SHIM%" (
     echo.
-    echo [ERRORE] Impossibile cancellare %TARGET%\%SHIM%
-    echo          Chiudi eventuali cmd aperti e riprova.
+    echo [ERROR] Cannot delete %TARGET%\%SHIM%
+    echo         Close any open cmd windows and try again.
     exit /b 1
 )
 echo.
-echo [OK] Rimosso: %TARGET%\%SHIM%
+echo [OK] Removed: %TARGET%\%SHIM%
 echo.
 call :whereclear
 echo.
-echo Nota: "cls" in cmd e "clear" in PowerShell non sono stati
-echo toccati e continuano a funzionare.
+echo Note: "cls" in cmd and "clear" in PowerShell were not touched
+echo and keep working.
 exit /b 0
 
 rem ------------------------------------------------------------
 :notarget
 echo.
-echo [ERRORE] Cartella non disponibile o non scrivibile:
-echo          %TARGET%
+echo [ERROR] Folder missing or not writable:
+echo         %TARGET%
 echo.
-echo          Puo' succedere se la cartella e' stata rimossa o se
-echo          l'utente non ha i permessi di scrittura.
-echo          In quel caso: crea una cartella qualsiasi, mettila
-echo          nel PATH utente, e copiaci dentro un file
-echo          %SHIM% contenente le due righe qui sopra.
-echo          Non aggiungo io il PATH per non modificare la tua
-echo          configurazione senza che tu lo veda.
+echo         This can happen if the folder was removed or if the
+echo         user has no write permission on it.
+echo         In that case: create any folder, add it to the user
+echo         PATH, and copy a %SHIM% file in there containing the
+echo         two lines above.
+echo         I do not add the PATH entry myself, to avoid changing
+echo         your configuration without you noticing.
 exit /b 1
 
 rem ------------------------------------------------------------
 :writefail
 echo.
-echo [ERRORE] Scrittura fallita su:
-echo          %TARGET%\%SHIM%
+echo [ERROR] Write failed on:
+echo         %TARGET%\%SHIM%
 exit /b 1
 
 rem ------------------------------------------------------------
-rem  Sotto-routine: la cartella esiste ed e' scrivibile?
+rem  Subroutine: does the folder exist and is it writable?
 :checkdir
 set "PROBE=%~1\.__clear_alias_probe.tmp"
 if not exist "%~1\" exit /b 1
@@ -137,40 +137,41 @@ if not exist "%PROBE%" exit /b 1
 del /q "%PROBE%" >nul 2>&1
 exit /b 0
 
-rem  Sotto-routine: dove risolve "clear" adesso?
+rem  Subroutine: where does "clear" resolve right now?
 :whereclear
-echo Verifica - dove risolve "clear" in questo momento:
+echo Checking where "clear" resolves right now:
 where clear 2>nul
 if errorlevel 1 (
-    echo   [ATTENZIONE] "clear" non viene trovato nel PATH.
-    echo                Controlla che %TARGET% sia nel PATH utente.
+    echo   [WARNING] "clear" was not found in PATH.
+    echo             Check that %TARGET% is in your user PATH.
 ) else (
-    echo   [OK] Trovato. Se sopra compaiono piu' righe, in cmd
-    echo        vince la PRIMA: se non e' lo shim, un altro comando
-    echo        clear, per esempio un clear.exe, lo precede nel PATH.
+    echo   [OK] Found. If more than one line is listed above, cmd
+    echo        uses the FIRST one: if that is not the shim, another
+    echo        clear command, for example a clear.exe, comes first
+    echo        in PATH.
 )
 exit /b 0
 
-rem  Sotto-routine: PowerShell ce l'ha gia' o no?
+rem  Subroutine: does PowerShell already have it or not?
 :psstatus
 where powershell >nul 2>&1
 if errorlevel 1 exit /b 0
 echo.
-echo Stato di PowerShell:
-powershell -NoProfile -Command "$a = Get-Command clear -ErrorAction SilentlyContinue; if ($a) { '  [OK] gia'' disponibile: ' + $a.CommandType + ' -> ' + $a.Definition } else { '  [INFO] assente. Aggiungi al profilo la riga:'; '           Set-Alias -Name clear -Value Clear-Host' }" 2>nul
+echo PowerShell status:
+powershell -NoProfile -Command "$a = Get-Command clear -ErrorAction SilentlyContinue; if ($a) { '  [OK] already available: ' + $a.CommandType + ' -> ' + $a.Definition } else { '  [INFO] not available. Add this line to your profile:'; '           Set-Alias -Name clear -Value Clear-Host' }" 2>nul
 exit /b 0
 
 rem ------------------------------------------------------------
 :usage
 echo.
-echo  clear-alias.bat - comando "clear" in cmd.exe
+echo  clear-alias.bat - the "clear" command for cmd.exe
 echo.
-echo  Uso:
-echo    clear-alias.bat              installa (o ripara) lo shim
-echo    clear-alias.bat /uninstall   rimuove lo shim
-echo    clear-alias.bat /?           questo aiuto
+echo  Usage:
+echo    clear-alias.bat              install or repair the shim
+echo    clear-alias.bat /uninstall   remove the shim
+echo    clear-alias.bat /?           this help
 echo.
-echo  Non modifica registro, PATH o privilegi: crea solo un file
-echo  clear.cmd in %LOCALAPPDATA%\Microsoft\WindowsApps
+echo  Does not modify the registry, PATH or privileges: it only
+echo  creates a clear.cmd file in %LOCALAPPDATA%\Microsoft\WindowsApps
 echo.
 exit /b 0
